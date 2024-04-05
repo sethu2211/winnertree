@@ -1,0 +1,43 @@
+import java.util.*;
+import java.util.Arrays;
+public class Main{
+    public static class WinnerTree{
+        private int[] tree;
+        private int[] players;
+        public WinnerTree(int[] players){
+            this.players=players;
+            int n=players.length;
+            int treesize=1;
+            while(treesize<n){
+                treesize*=2;
+            }
+            tree= new int[2*treesize -1];
+            Arrays.fill(tree,-1);
+            for(int i=0;i<n;i++){
+                tree[treesize-1+i]=i;
+            }
+            build(0,0,treesize-1);
+        }
+        
+        
+        private void build(int node, int left, int right){
+            if(left==right)return;
+            int mid=(left+right)/2;
+            build(2 * node + 1, left, mid);
+            build(2 * node + 2, mid + 1, right);
+            
+            tree[node]=players[tree[2*node+1]]<=players[tree[2*node+2]]?tree[2*node+1]:tree[2*node+2];
+        }
+        public int winner(){
+            return tree[0];
+        }
+        
+    }
+    public static void main(String[] args){
+        int[] players={3, 7, 1, 9, 4, 2, 8, 5};
+        WinnerTree win = new WinnerTree(players);
+        int index=win.winner();
+        System.out.println(index);
+        System.out.println(players[index]);
+    }
+}
